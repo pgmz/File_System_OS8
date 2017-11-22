@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "vdisk.h"
+#include "funciones1.c"
 
 #pragma pack(2)
 
@@ -63,6 +64,7 @@ struct INODE {
 int main()
 {
 	struct MBR mbr;
+	char buffer_prueba[] = {"Prueba inicial"};
 	
 	int cilinic=0,supinic=0,sfinic=2;
 	int cilfin=599,supfin=5,sffin=17;
@@ -89,5 +91,6 @@ int main()
 		   							,mbr.partition[0].CHS_end[0]);
 	
 	vdwritesector(0,0,0,1,1,(char *) &mbr);
-
+	vdwriteseclog(1,(char *)buffer_prueba);
+	vdreadseclog(1,(char *)buffer_prueba);
 }

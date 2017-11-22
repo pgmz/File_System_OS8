@@ -1,10 +1,12 @@
+#include "vdisk.h"
+
 int vdwriteseclog(int seclog,char *buffer)
 {
 	// Calcular a partir de seclog
 	//	- cilindro
 	//	- superficie
 	// 	- sector_fisico
-	vdwritesector(0,superficie,cilindro,sector_fisico,1,*buffer);
+	vdwritesector(0,obtenerSuperficie(seclog),obtenerCilindro(seclog),obtenerSectorFisico(seclog),1,(char *) &buffer);
 }
 
 int vdreadseclog(int seclog,char *buffer)
@@ -13,7 +15,7 @@ int vdreadseclog(int seclog,char *buffer)
 	//	- cilindro
 	//	- superficie
 	// 	- sector_fisico
-	vdreadsector(0,superficie,cilindro,sector_fisico,1,*buffer);
+	vdreadsector(0,obtenerSuperficie(seclog),obtenerCilindro(seclog),obtenerSectorFisico(seclog),1,(char *) &buffer);
 }
 
 // Funciones para la lectura y escritura de bloques, a partir 
@@ -24,6 +26,7 @@ int writeblock(int nblock,char *buffer)
 	int slad; // Sector lógico del área de datos
 	int secs_x_bloque;
 	int i;
+	int seclog;
 
 	// Obtener los datos del sector de boot de la partición
 	// para:
@@ -50,7 +53,7 @@ int readblock(int nblock,char *buffer)
 	int slad; // Sector lógico del área de datos
 	int secs_x_bloque;
 	int i;
-
+	int seclog;
 	// Obtener los datos del sector de boot de la partición
 	// para:
 	// 	1.- Determinar en que sector lógico inicia el área
@@ -69,4 +72,19 @@ int readblock(int nblock,char *buffer)
 		seclog++;
 		buffer+=512;
 	}
+}
+
+int obtenerSectorFisico(int seclog)
+{
+	return (((seclog+SFIP-1)%SEC_X_TRACK)+1);
+}
+
+int obtenerCilindro(int seclog)
+{
+	return (((seclog+SFIP-1)+(HIP*SEC_X_TRACK))/(SEC_X_TRACK*HEADS));
+}
+
+int obtenerSuperficie(int seclog)
+{
+	return (((seclog+SFIP-1)/(SEC_X_TRACK+HIP))%HEADS);
 }
