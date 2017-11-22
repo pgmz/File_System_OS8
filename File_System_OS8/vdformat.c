@@ -2,32 +2,19 @@
 #include <string.h>
 #include "vdisk.h"
 
+
 #define CYLINDERS 200
 #define HEADS 8
 #define SECTORS 27
 
-// Esta estructura debe ser un sector y debe medir 512 bytes
-struct SECBOOTPART {
-	char jump[4];						// Instrucción JMP para transferir el ccontrol a la dirección donde está el código de boot del SO
-	char nombre_particion[8];
-	unsigned short sec_inicpart;		// 0 sectores 
-	unsigned char sec_res;		// 1 sector reservado
-	unsigned char sec_mapa_bits_area_nodos_i;// 1 sector
-	unsigned char sec_mapa_bits_bloques;	// 6 sectores
-	unsigned short sec_tabla_nodos_i;	// 3 sectores, directorio raíz
-	unsigned int sec_log_particion;		// 43199 sectores
-	unsigned char sec_x_bloque;			// 2 sectores por bloque
-	unsigned char heads;				// 8 superficies				
-	unsigned char cyls;				// 200 cilindros
-	unsigned char secfis;				// 27 sectores por track
-	char bootcode[484];	// Código de arranque
-};
-
 int main()
 {
 	struct SECBOOTPART sbp;
+	struct MBR mbr;
 	
+	memset(&mbr,0,512);
 	memset(&sbp,0,512);
+	
 	strcpy(sbp.nombre_particion,"PRUEBA12");
 	sbp.sec_inicpart=0;
 	sbp.sec_res=1;
@@ -41,12 +28,25 @@ int main()
 	sbp.secfis=SECTORS;
 	
 	int unidad=0;
+	
+	int res = vdreadsector(0,0,0,1,1,(char *) &mbr);
+	
+	printf("res: %d \n\r", res);
+	
 	// Leer la tabla de particiones, Cilindro 0, Superficie 0, SF 1
 	// Determino CHS Inicial
-	int cilindro_inicial=0;
-	int superficie_inicial=0;
-	int secfis_inicial=2;
+	int cilindro_inicial=
+	(((0xC0 & (mbr.partition[0].CHS_begin[1])) >> 30)
+		|(mbr.partition[0].CHS_begin[2]));
+		
+	int superficie_inicial= (mbr.partition[0].CHS_begin[0]);
 	
+	int secfis_inicial= (mbr.partition[0].CHS_begin[1] & 0x3F);
+	
+	printf("CHS Inicial %X %X %X ",cilindro_inicial
+		   							,superficie_inicial
+		   							,secfis_inicial);
+		   							
 	// Escribir la estructura en el sector lógico 0 de la partición
 	vdwritesector(unidad,superficie_inicial,cilindro_inicial,secfis_inicial,1,(char *) &sbp);
 }

@@ -8,6 +8,7 @@
 
 int main(int argc,char *argv[])
 {
+	int logic;
 	int drive;
 	int ncyl,nhead,nsec;
 	int fd;
@@ -16,12 +17,14 @@ int main(int argc,char *argv[])
 	int i,j,r;
 	unsigned char c;
 
-	if(argc==5)
+	if(argc==2)
 	{	
-		drive=atoi(argv[1]);
-		ncyl=atoi(argv[2]);
-		nhead=atoi(argv[3]);
-		nsec=atoi(argv[4]);
+		logic = atoi(argv[1]);
+		drive = 0;
+		ncyl = ((logic + 2 - 1) + 0*SECTORS)/(SECTORS*HEADS);
+		nhead = ((logic + 2 - 1)/(SECTORS))%HEADS;
+		nsec = (logic + 2 - 1)%SECTORS + 1;
+		
 		if(drive<0 || drive> 3 || ncyl>CYLINDERS || nhead > HEADS || nsec > SECTORS || ncyl<0 || nhead<0 || nsec<1)
 		{
 			fprintf(stderr,"Posición invalida\n");
