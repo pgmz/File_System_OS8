@@ -10,7 +10,7 @@ int main()
 	struct MBR mbr;
 	
 	int cilinic=0,supinic=0,sfinic=2;
-	int cilfin=599,supfin=5,sffin=17;
+	int cilfin=199,supfin=7,sffin=27;
 	
 	memset(&mbr,0,512);
 	
@@ -33,6 +33,6 @@ int main()
 		   							,mbr.partition[0].CHS_end[1]
 		   							,mbr.partition[0].CHS_end[0]);
 	
-	int res = vdwritesector(0,0,0,1,1,(char *) &mbr);
-	printf("res: %d \n\r", res);
+	vdwritesector(0,0,0,1,1,(char *) &mbr);
+	
 }

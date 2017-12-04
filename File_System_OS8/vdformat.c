@@ -31,8 +31,6 @@ int main()
 	
 	int res = vdreadsector(0,0,0,1,1,(char *) &mbr);
 	
-	printf("res: %d \n\r", res);
-	
 	// Leer la tabla de particiones, Cilindro 0, Superficie 0, SF 1
 	// Determino CHS Inicial
 	int cilindro_inicial=
