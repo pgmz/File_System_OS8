@@ -20,6 +20,8 @@ int main()
 {
 	char linea[MAXLEN];
 	int result=1;
+	assigninode(0);
+	
 	while(result)
 	{
 		printf("vshell > ");
@@ -27,6 +29,7 @@ int main()
 		read(0,linea,80);
 		locateend(linea);
 		result=executecmd(linea);
+		memset(&linea, 0, MAXLEN);
 	} 
 }
 
@@ -63,17 +66,20 @@ int executecmd(char *linea)
 			fprintf(stderr,"Error en los argumentos\n");
 			return(1);
 		}
-		if(!isinvd(arg1) && !isinvd(arg2))
-			copyuu(arg1,arg2);
+		if(!isinvd(arg1) && !isinvd(arg2)){
+			copyuv(arg1,arg2);	//de virtual a virtual
+		}
+		else if(!isinvd(arg1) && isinvd(arg2)){
+			copyuu(arg1,&arg2[2]);	//de real a virtual
+		}
+		else if(isinvd(arg1) && !isinvd(arg2)){
 
-		else if(!isinvd(arg1) && isinvd(arg2))
-			copyuv(arg1,&arg2[5]);
+			copyvu(&arg1[2],arg2); // de virtual a real
+		}
+		else if(isinvd(arg1) && isinvd(arg2)){
 
-		else if(isinvd(arg1) && !isinvd(arg2))
-			copyvu(&arg1[5],arg2);
-
-		else if(isinvd(arg1) && isinvd(arg2))
-			copyvv(&arg1[5],&arg2[5]);
+			copyvv(&arg1[2],&arg2[2]); //de virtual a virtual
+		}
 			
 		
 	}
@@ -91,9 +97,9 @@ int executecmd(char *linea)
 	if(strcmp(cmd,"dir")==0)
 	{
 		if(arg1==NULL)
-			diru(arg1);
+			dirv(arg1);
 		else if(!isinvd(arg1))
-			dirv(&arg1[5]);
+			diru(&arg1[5]);
 	}
 	
 	// comando borrar
@@ -150,6 +156,7 @@ int copyuv(char *arg1,char *arg2)
 	char buffer[BUFFERSIZE];
 	int ncars;
 	
+
 	sfile=open(arg1,0);
 	dfile=vdcreat(arg2,0640);
 	do {
@@ -171,6 +178,10 @@ int copyvu(char *arg1,char *arg2)
 	char buffer[BUFFERSIZE];
 	int ncars;
 	
+	printf("hola \n");
+	printf("%s \n", arg1);
+	printf("%s \n", arg2);
+
 	sfile=vdopen(arg1,0);
 	dfile=creat(arg2,0640);
 	do {
@@ -194,7 +205,7 @@ int copyvv(char *arg1,char *arg2)
 	int ncars;
 	
 	sfile=vdopen(arg1,0);
-	dfile=vdcreat(arg2,0640);
+	dfile=vdcreat(arg2,0666);
 	do {
 		ncars=vdread(sfile,buffer,BUFFERSIZE);
 		vdwrite(dfile,buffer,ncars);

@@ -263,7 +263,7 @@ También vamos a usar el número de sectores que tiene la tabla de nodos-i
 
 	// Un archivo nuevo, su tamaño inicial es 0
 	inode[num].size=0;	// Tamaño del archivo en 0
-	
+		
 	// Establecer los apuntadores a bloques directos en 0
 	for(i=0;i<10;i++)
 		inode[num].direct_blocks[i]=0;
@@ -277,8 +277,11 @@ También vamos a usar el número de sectores que tiene la tabla de nodos-i
 	// i=num/8;
 	// result=vdwriteseclog(inicio_nodos_i+i,&inode[i*8]);
 	i = num/8;
+	
+	assigninode(num);
+	printf("%d", num);
+		
 	result=vdwriteseclog(getStartOfiNodeArea() + i, (char *) &inode[i*8]);
-
 	return(num);
 }
 

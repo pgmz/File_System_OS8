@@ -66,7 +66,6 @@ struct vddirent *vdreaddir(VDDIR *dirdesc)
 	while(isinodefree(*dirdesc) && *dirdesc<4096)
 		(*dirdesc)++;
 
-
 	// Apunta a donde está el nombre en el inodo	
 	current.d_name=inode[*dirdesc].name;
 

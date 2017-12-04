@@ -109,7 +109,7 @@ int vdcreat(char *filename,unsigned short perms)
 {
 	int numinode;
 	int i;
-
+	
 	// Ver si ya existe el archivo
 	numinode=searchinode(filename);
 	if(numinode==-1) // Si el archivo no existe
@@ -130,8 +130,7 @@ int vdcreat(char *filename,unsigned short perms)
 	// Escribir el archivo en el inodo encontrado
 // En un inodo de la tabla, escribe los datos del archivo
 	setninode(numinode,filename,perms,getuid(),getgid());
-		
-	// assigninode(numinode);
+	//assigninode(numinode);
 
 	// Poner el archivo en la tabla de archivos abiertos
 	// Establecer el archivo como abierto
@@ -380,12 +379,35 @@ int vdread(int fd, char *buffer, int bytes)
 
 int vdclose(int fd){
 		
+	int currinode, currblock, sector, result, saveblock;
+	char *buffer;
+		
 	loadFileTable();
 	
 	if(openfiles[fd].inuse==0)
 		return(-1);
 	
-	//Pendiente, actualizar buffer de indirectos en archivo
+	currinode = openfiles[fd].inode;
+	sector = (int)(currinode/8);
+	
+	//Escribir sector lógico donde está el nodo i
+	vdwriteseclog(getStartOfiNodeArea()+sector,(char *) &inode[sector*8]);
+
+	//Escribir el bloque que se encuentra en buffer si es que
+	//es diferente al actual
+	currblock = openfiles[fd].currbloqueenmemoria;
+	if(currblock != -1){
+		buffer = calloc(2048, sizeof(char));
+		saveblock = readblock(currblock, buffer);
+		if(strcmp(buffer,openfiles[fd].buffer) != 0){
+			writeblock(currblock, openfiles[fd].buffer);
+		}
+	}
+	//Copiar buffer de indirectos si está cargado
+	if (inode[currinode].indirect != 0)
+		writeblock(inode[currinode].indirect, 
+		(char *) openfiles[fd].buffindirect);
+	
 	
 	openfiles[fd].inuse = 0;
 	openfiles[fd].currpos = 0;
