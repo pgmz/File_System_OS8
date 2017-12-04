@@ -2,10 +2,11 @@
 // Para el mapa de bits del área de nodos i
 // *************************************************************************
 
-#include <stdio.h>
-#include <string.h>
-#include "DateManagement.h"
+#pragma once
+
 #include "BlockManagement.h"
+#include "DateManagement.h"
+
 
 #define TOTAL_NODOS_I		24 //tenemos 3 sectores para la tabla de inodos, (512 * 3), y cada estructura de inodo, mide 64, por esto
 								// (512 * 3)/(64) = 24

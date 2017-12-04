@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <string.h>
 #include "vdisk.h"
 
 #define SFIP			2

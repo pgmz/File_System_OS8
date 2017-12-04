@@ -6,7 +6,7 @@
 
 #define SEC_X_TRACK		27
 
-static int secboot_en_memoria = 0;
+int secboot_en_memoria = 0;
 struct SECBOOTPART secboot;
 
 int vdwriteseclog(int seclog,char *buffer)

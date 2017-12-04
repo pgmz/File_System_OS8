@@ -1,8 +1,6 @@
 /* Este programa escribe el MBR que contiene la tabla de particiones
    en el disco */
 
-#include <stdio.h>
-#include <string.h>
 #include "vdisk.h"
 
 int main()

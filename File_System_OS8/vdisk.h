@@ -1,7 +1,11 @@
+#include <stdio.h>
+#include <string.h>
+
 #define HEADS 8
 #define SECTORS 27
 #define CYLINDERS 200 
 
+#pragma once
 #pragma pack(2)
 
 struct PARTITION 
