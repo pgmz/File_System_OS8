@@ -11,4 +11,8 @@ struct DATE {
 	int sec;
 };
 
-int currdatetimetoint();
+unsigned int datetoint(struct DATE date);
+int inttodate(struct DATE *date,unsigned int val);
+// Obtiene la fecha y hora actual del sistema y la 
+// empaqueta en un entero de 32 bits
+unsigned int currdatetimetoint();

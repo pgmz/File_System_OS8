@@ -4,27 +4,27 @@
 
 #include "iNodeManagement.h"
 
-static int mapa_bits_nodos_i = 0;
+int mapa_bits_nodos_i;
 
-static int secboot_en_memoria_inode = 0;
-struct SECBOOTPART secboot;
+extern int secboot_en_memoria;
+extern struct SECBOOTPART secboot;
 
-static int inodesmap_en_memoria = 0;
+int inodesmap_en_memoria = 0;
 //512, porque eso mide un
 char inodesmap[512];
 
-static int nodos_i_en_memoria = 0;
+int nodos_i_en_memoria = 0;
 struct INODE inode[24];
 
 int getStartOfiNodeArea(){
 	
 	int result;
 	
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	
 	if (result == -1){
@@ -38,11 +38,11 @@ int getStartOfiNodeMap(){
 	
 	int result;
 	
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	
 	if (result == -1){
@@ -60,11 +60,11 @@ int isinodefree(int inode)
 	int result;
 
 	// Checar si el sector de boot de la partición está en memoria
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	
 	mapa_bits_nodos_i= secboot.sec_inicpart +secboot.sec_res; 	
@@ -94,11 +94,11 @@ int nextfreeinode()
 	int result;
 
 	// Checar si el sector de boot de la partición está en memoria
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	mapa_bits_nodos_i= secboot.sec_inicpart +secboot.sec_res; 	
 //Usamos la información del sector de boot de la partición para 
@@ -143,11 +143,11 @@ int assigninode(int inode)
 	int result;
 
 	// Checar si el sector de boot de la partición está en memoria
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	mapa_bits_nodos_i= secboot.sec_inicpart +secboot.sec_res; 	
 //Usamos la información del sector de boot de la partición para 
@@ -175,11 +175,11 @@ int unassigninode(int inode)
 	int result;
 
 	// Checar si el sector de boot de la partición está en memoria
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	mapa_bits_nodos_i= secboot.sec_inicpart +secboot.sec_res; 	
 //Usamos la información del sector de boot de la partición para 
@@ -213,11 +213,11 @@ El sector lógico donde empieza la tabla de nodos-i del directorio raiz.
 También vamos a usar el número de sectores que tiene la tabla de nodos-i
 */
 
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 
 	//Usamos la información del sector de boot de la partición para 
@@ -300,11 +300,11 @@ El sector lógico donde empieza la tabla de nodos-i
 También vamos a usar el número de sectores que tiene la tabla de nodos-i
 */
 
-	if(!secboot_en_memoria_inode)
+	if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	
 
@@ -371,11 +371,11 @@ También vamos a usar el número de sectores que tiene la tabla de nodos-i
 
 Asegurar que los sectores de la tabla nodos-I están en memoria, si no están en memoria, cargarlos.
 */
-if(!secboot_en_memoria_inode)
+if(!secboot_en_memoria)
 	{
 		// Si no está en memoria, cárgalo
 		result=vdreadseclog(0,(char *) &secboot);
-		secboot_en_memoria_inode=1;
+		secboot_en_memoria=1;
 	}
 	
 

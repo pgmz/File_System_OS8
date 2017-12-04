@@ -1,6 +1,4 @@
 
-#include <stdio.h>
-#include <string.h>
 #include "funciones_bajo_nivel.h"
 
 int isblockfree(int block);	

@@ -4,12 +4,12 @@
 
 #include "BlockManagement.h"
 
-static int secboot_en_memoria = 0;
-struct SECBOOTPART secboot;
+extern int secboot_en_memoria;
+extern struct SECBOOTPART secboot;
 
-static int mapa_bits_bloques = 0;
+int mapa_bits_bloques = 0;
 
-static int blocksmap_en_memoria = 0;
+int blocksmap_en_memoria = 0;
 char blocksmap[512*6];
 
 // Usando la información del mapa de bits del area de datos, saber si un bloque está libre o no

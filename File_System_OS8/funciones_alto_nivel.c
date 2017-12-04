@@ -4,6 +4,7 @@
 int fileTableLoaded = 0;
 struct OPENFILES openfiles[24];
 
+extern int inodesmap_en_memoria;
 extern struct INODE inode[24];
 
 unsigned short *postoptr(int fd,int pos)

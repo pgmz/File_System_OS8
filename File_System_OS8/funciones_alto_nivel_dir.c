@@ -1,6 +1,13 @@
+#include "funciones_alto_nivel_dir.h"
+
 VDDIR dirs[2]={-1,-1};
 struct vddirent current;
 
+extern int secboot_en_memoria;
+extern struct SECBOOTPART secboot;
+
+extern int nodos_i_en_memoria;
+extern struct INODE inode[24];
 
 VDDIR *vdopendir(char *path)
 {
@@ -20,7 +27,7 @@ VDDIR *vdopendir(char *path)
 	if(!nodos_i_en_memoria)
 	{
 		for(i=0;i<secboot.sec_tabla_nodos_i;i++)
-			result=vdreadseclog(inicio_nodos_i+i,&inode[i*8]);
+			result=vdreadseclog(getStartOfiNodeArea()+i,(char *) &inode[i*8]);
 
 		nodos_i_en_memoria=1;
 	}
@@ -50,7 +57,7 @@ struct vddirent *vdreaddir(VDDIR *dirdesc)
 	if(!nodos_i_en_memoria)
 	{
 		for(i=0;i<secboot.sec_tabla_nodos_i;i++)
-			result=vdreadseclog(inicio_nodos_i+i,&inode[i*8]);
+			result=vdreadseclog(getStartOfiNodeArea()+i,(char *) &inode[i*8]);
 
 		nodos_i_en_memoria=1;
 	}
