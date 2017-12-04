@@ -95,6 +95,16 @@ int executecmd(char *linea)
 		else if(!isinvd(arg1))
 			dirv(&arg1[5]);
 	}
+	
+	// comando borrar
+	if(strcmp(cmd,"delete")==0)
+	{
+	
+		if(isinvd(arg1))
+			catv(&arg1[5]);
+		else
+			delu(arg1);
+	}
 }
 
 /* Regresa verdadero si el nombre del archivo no comienza con // y por lo 
@@ -278,3 +288,14 @@ int dirv(char *dir)
 	vdclosedir(dd);	
 }
 
+int delu(char *file)
+{
+	remove(file);
+	return 1;
+}
+
+int delv(char *file)
+{
+	vdunlink(file);
+	return(1);
+}
